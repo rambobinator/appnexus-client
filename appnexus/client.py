@@ -1,5 +1,6 @@
 # -*- coding:utf-8-*-
 
+import logging
 import time
 import os
 try:
@@ -15,6 +16,8 @@ from appnexus.exceptions import (AppNexusException, RateExceeded, NoAuth,
                                  BadCredentials)
 from appnexus.utils import normalize_service_name
 
+logger = logging.getLogger("appnexus-client")
+
 
 class AppNexusClient(object):
     """Represents an active connection to the AppNexus API"""
@@ -23,13 +26,12 @@ class AppNexusClient(object):
     error_codes = {"RATE_EXCEEDED": RateExceeded}
     error_ids = {"NOAUTH": NoAuth}
 
-    def __init__(self, username=None, password=None, debug=False, test=False,
+    def __init__(self, username=None, password=None, test=False,
                  representation=representations.raw, token_file=None):
         self.credentials = {"username": username, "password": password}
         self.token = None
         self.token_file = None
         self.load_token(token_file)
-        self.debug = bool(debug)
         self.representation = representation
         self.test = bool(test)
 
@@ -77,8 +79,7 @@ class AppNexusClient(object):
         while not valid_response:
             headers = dict(Authorization=self.token)
             uri = self._prepare_uri(service, **kwargs)
-            if self.debug:  # pragma: no cover
-                print('\n'.join(map(str, (headers, uri, data))))
+            logger.debug('\n'.join(map(str, (headers, uri, data))))
 
             response = send_method(uri, headers=headers, json=data)
             response_data = response.json()
@@ -96,8 +97,7 @@ class AppNexusClient(object):
 
     def update_token(self):
         """Request a new token and store it for future use"""
-        if self.debug:  # pragma: no cover
-            print('updating token')
+        logger.info('updating token')
         if None in self.credentials.values():
             raise RuntimeError("You must provide an username and a password")
         credentials = dict(auth=self.credentials)
@@ -159,13 +159,11 @@ class AppNexusClient(object):
         args.update(kwargs)
         return Cursor(self, service, representation, **args)
 
-    def connect(self, username, password, debug=None, test=None,
+    def connect(self, username, password, test=None,
                 representation=None, token_file=None):
         self.credentials = {"username": username, "password": password}
         if test is not None:
             self.test = bool(test)
-        if debug is not None:
-            self.debug = bool(debug)
         if representation is not None:
             self.representation = representation
         if token_file is not None:
@@ -259,9 +257,9 @@ class Service(object):
 client = AppNexusClient()
 
 
-def connect(username, password, debug=None, test=None, token_file=None):
+def connect(username, password, test=None, token_file=None):
 
-    return client.connect(username, password, debug, test, token_file)
+    return client.connect(username, password, test, token_file)
 
 
 def connect_from_file(filename):
