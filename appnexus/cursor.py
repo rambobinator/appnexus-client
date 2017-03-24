@@ -121,4 +121,5 @@ class Cursor(object):
         size = min(count_with_skip, self._limit)
         return size
 
+
 __all__ = ["Cursor"]

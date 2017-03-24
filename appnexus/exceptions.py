@@ -33,4 +33,5 @@ class BadCredentials(AppNexusException):
     def __str__(self):
         return "You provided bad credentials for the AppNexus API"
 
+
 __all__ = ["AppNexusException", "RateExceeded", "NoAuth", "BadCredentials"]

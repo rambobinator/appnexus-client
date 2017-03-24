@@ -152,6 +152,7 @@ def gen_services(services_list):
         model = type(service, (Model,), {})
         globals().setdefault(service, model)
 
+
 gen_services(services_list)
 
 __all__ = ["Model", "services_list"] + services_list

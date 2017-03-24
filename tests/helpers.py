@@ -27,9 +27,9 @@ def gen_random_collection(count=None, object_type="campaigns"):
     result = []
     for i in range(count // 100):
         result.append(gen_random_page(count=count, object_type=object_type,
-                      start_element=i*100))
+                      start_element=i * 100))
     if count % 100 != 0:
         result.append(gen_random_page(count=count, object_type=object_type,
-                                      start_element=i*100,
+                                      start_element=i * 100,
                                       num_elements=count % 100))
     return result

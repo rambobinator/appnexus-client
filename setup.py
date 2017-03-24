@@ -19,6 +19,7 @@ def get_version():
     return subprocess.check_output(["git", "describe", "--tags", "--always"],
                                    universal_newlines=True)[:-1]
 
+
 setup(
     name="appnexus-client",
     version=get_version(),
