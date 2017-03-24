@@ -4,7 +4,7 @@ import time
 import os
 try:
     from configparser import ConfigParser
-except ImportError:
+except ImportError:  # pragma: no cover
     from ConfigParser import ConfigParser
 
 import requests
